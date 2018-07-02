@@ -33,8 +33,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <!-- BOOTSTRAP JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  <!-- SOCKET.IO JS -->
+  <script src="/socket.io/socket.io.js"></script>
   <!-- CUSTOM JS-->
   <script>
+    const socket = io();
+
     $(() => {
       $('#send').on('click', () => {
         let message = {name: $('#name').val(), message: $('#message').val()};
@@ -42,6 +46,8 @@
       });
       getMessages();
     });
+
+    socket.on('message', addMessages);
 
     function addMessages(message) {
       $('#messages').append(`<h4>${message.name}</h4> <p>${message.message}</p>`);

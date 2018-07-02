@@ -1,6 +1,13 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const http = require('http').createServer(app);
+
+const io = require('socket.io')(http);
+io.on('connection', function(client){
+  client.on('event', function(data){});
+  client.on('disconnect', function(){});
+});
 
 // MIDDLEWEAR
 app.use(express.static(__dirname + '/public'));
@@ -20,9 +27,14 @@ app.get('/messages', (req, res) => {
 
 app.post('/messages', (req, res) => {
   messages.push(req.body);
+  io.emit('message', req.body);
   res.sendStatus(200);
 });
 
-let server = app.listen(3000, () => {
+io.on('connection', (socket) => {
+  console.log('User connected');
+});
+
+let server = http.listen(3000, () => {
   console.log('App Chat is listening on port 3000!'), server.address().port
 });
